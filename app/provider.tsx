@@ -1,7 +1,10 @@
 'use client'
 
+import { CacheProvider } from '@chakra-ui/next-js'
+import { ChakraProvider } from '@chakra-ui/react'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { base } from 'viem/chains'
+import { theme } from './style'
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	const defaultChain = base
@@ -10,12 +13,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<PrivyProvider
 			appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''}
-			// onSuccess={(user, isNewUser) => {
-			// 	sendConnectWalletEvent(user, isNewUser)
-			// }}
 			config={{
 				loginMethods: ['wallet'],
 				appearance: {
+					theme: 'dark',
+					accentColor: '#D5EE5A',
 					walletList: [
 						'detected_wallets',
 						'coinbase_wallet',
@@ -39,7 +41,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 				},
 			}}
 		>
-			{children}
+			<CacheProvider>
+				<ChakraProvider theme={theme}>{children}</ChakraProvider>
+			</CacheProvider>
 		</PrivyProvider>
 	)
 }

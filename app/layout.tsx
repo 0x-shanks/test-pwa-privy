@@ -1,6 +1,8 @@
 import Meta from '@/components/meta'
 import { Providers } from './provider'
-import '../styles/globals.css'
+
+// NOTE: Cause of the bug
+import './globals.css'
 
 export default function RootLayout({
 	children,

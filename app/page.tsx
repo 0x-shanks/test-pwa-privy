@@ -1,11 +1,16 @@
 'use client'
 
-import { LoginInfo } from '@/components/LoginInfo'
-import { Button, Center, Spinner, VStack } from '@chakra-ui/react'
+import { useMainWalletAddress } from '@/hooks/useMainWalletAddress'
+import { useSessionWalletAddress } from '@/hooks/useSessionWalletAddress'
+import { Button, Center, Spinner, VStack, Text } from '@chakra-ui/react'
 import { usePrivy } from '@privy-io/react-auth'
+import { useAccount } from 'wagmi'
 
 const Index = () => {
 	const { ready, authenticated, login, logout, exportWallet } = usePrivy()
+	const { address: mainAddress } = useMainWalletAddress()
+	const { address: sessionAddress } = useSessionWalletAddress()
+	const account = useAccount()
 
 	if (!ready) {
 		return (
@@ -20,7 +25,9 @@ const Index = () => {
 	if (!authenticated) {
 		return (
 			<main>
-				<LoginInfo login={login} />
+				<Center w='full' h='100vh'>
+					<Button onClick={login}>Login</Button>
+				</Center>
 			</main>
 		)
 	}
@@ -28,10 +35,16 @@ const Index = () => {
 	return (
 		<>
 			<main>
-				<VStack>
-					<Button onClick={logout}>Logout</Button>
-					<Button onClick={exportWallet}>Export Wallet</Button>
-				</VStack>
+				<Center w='full' h='100vh'>
+					<VStack>
+						<VStack>
+							<Text>Connected embedded wallet: {sessionAddress}</Text>
+							<Text>Connected external wallet: {mainAddress}</Text>
+							<Text>Wagmi connect wallet: {account.address}</Text>
+						</VStack>
+						<Button onClick={logout}>Logout</Button>
+					</VStack>
+				</Center>
 			</main>
 		</>
 	)
